@@ -28,6 +28,9 @@ public class ExpTest {
      * Each test method should have appropriate JUnit assertions to test a single behavior.
      * You should not add arbitrary code to test methods to just increase coverage.
      */
+    /**
+     * Test for Defining Illegal Variable
+     */
     @Test
     void testVariableIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> {
@@ -35,6 +38,9 @@ public class ExpTest {
         });
     }
 
+    /**
+     * Test for Exp::GetVariables
+     */
     @Test
     void testGetVariables() {
         String exp = "p1 || p2 && ! p3 || true";
