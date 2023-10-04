@@ -1,5 +1,6 @@
 package edu.postech.csed332.homework2;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,19 +21,21 @@ public record Variable(int identifier) implements Exp {
     @Override
     public Set<Integer> getVariables() {
         // TODO: implement this
-        return null;
+        HashSet<Integer> res = new HashSet<>();
+        res.add(this.identifier);
+        return res;
     }
 
     @Override
     public Boolean evaluate(Map<Integer, Boolean> assignment) {
         // TODO: implement this
-        return null;
+        return assignment.get(this.identifier);
     }
 
     @Override
     public Exp simplify() {
         // TODO: implement this
-        return null;
+        return this;
     }
 
     @Override
