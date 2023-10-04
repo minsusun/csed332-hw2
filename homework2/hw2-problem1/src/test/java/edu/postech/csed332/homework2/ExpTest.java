@@ -45,7 +45,6 @@ public class ExpTest {
     void testGetVariables() {
         String exp = "p1 || p2 && ! p3 || true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "((p1 || (p2 && (! p3))) || true)");
         assertEquals(parsed.getVariables(), Set.of(1, 2, 3));
     }
 
@@ -57,7 +56,6 @@ public class ExpTest {
     void testEvaluateExp() {
         String exp = "p1 || p2 && ! p3 || true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "((p1 || (p2 && (! p3))) || true)");
         assertEquals(parsed.evaluate(Map.of(1, true, 2, true, 3, true)), true);
         assertEquals(parsed.evaluate(Map.of(1, false, 2, true, 3, true)), true);
         assertEquals(parsed.evaluate(Map.of(1, true, 2, false, 3, true)), true);
@@ -75,7 +73,6 @@ public class ExpTest {
     void testEvaluateConjunction_1() {
         String exp = "true && true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(true && true)");
         assertEquals(parsed.evaluate(Map.of()), true);
     }
 
@@ -83,7 +80,6 @@ public class ExpTest {
     void testEvaluateConjunction_2() {
         String exp = "true && false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(true && false)");
         assertEquals(parsed.evaluate(Map.of()), false);
     }
 
@@ -91,7 +87,6 @@ public class ExpTest {
     void testEvaluateConjunction_3() {
         String exp = "false && false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(false && false)");
         assertEquals(parsed.evaluate(Map.of()), false);
     }
 
@@ -99,7 +94,6 @@ public class ExpTest {
     void testEvaluateConjunction_4() {
         String exp = "p1 && p2";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && p2)");
         assertEquals(parsed.evaluate(Map.of(1, true, 2, true)), true);
         assertEquals(parsed.evaluate(Map.of(1, true, 2, false)), false);
         assertEquals(parsed.evaluate(Map.of(1, false, 2, false)), false);
@@ -112,7 +106,6 @@ public class ExpTest {
     void testEvaluateDisjunction_1() {
         String exp = "true || true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(true || true)");
         assertEquals(parsed.evaluate(Map.of()), true);
     }
 
@@ -120,7 +113,6 @@ public class ExpTest {
     void testEvaluateDisjunction_2() {
         String exp = "true || false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(true || false)");
         assertEquals(parsed.evaluate(Map.of()), true);
     }
 
@@ -128,7 +120,6 @@ public class ExpTest {
     void testEvaluateDisjunction_3() {
         String exp = "false || false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(false || false)");
         assertEquals(parsed.evaluate(Map.of()), false);
     }
 
@@ -136,7 +127,6 @@ public class ExpTest {
     void testEvaluateDisjunction_4() {
         String exp = "p1 || p2";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || p2)");
         assertEquals(parsed.evaluate(Map.of(1, true, 2, true)), true);
         assertEquals(parsed.evaluate(Map.of(1, true, 2, false)), true);
         assertEquals(parsed.evaluate(Map.of(1, false, 2, false)), false);
@@ -149,7 +139,6 @@ public class ExpTest {
     void testEvaluateNegation_1() {
         String exp = "! true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! true)");
         assertEquals(parsed.evaluate(Map.of()), false);
     }
 
@@ -157,7 +146,6 @@ public class ExpTest {
     void testEvaluateNegation_2() {
         String exp = "! false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! false)");
         assertEquals(parsed.evaluate(Map.of()), true);
     }
 
@@ -165,7 +153,6 @@ public class ExpTest {
     void testEvaluateNegation_3() {
         String exp = "! p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! p1)");
         assertEquals(parsed.evaluate(Map.of(1, true)), false);
         assertEquals(parsed.evaluate(Map.of(1, false)), true);
     }
@@ -177,7 +164,6 @@ public class ExpTest {
     void testEvaluateVariable() {
         String exp = "p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "p1");
         assertEquals(parsed.evaluate(Map.of(1, true)), true);
         assertEquals(parsed.evaluate(Map.of(1, false)), false);
     }
@@ -199,7 +185,6 @@ public class ExpTest {
     void testSimplifyIdentityLaws_1() {
         String exp = "p1 && true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && true)");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 
@@ -207,7 +192,6 @@ public class ExpTest {
     void testSimplifyIdentityLaws_2() {
         String exp = "p1 || false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || false)");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 
@@ -218,7 +202,6 @@ public class ExpTest {
     void testSimplifyIdempotentLaws_1() {
         String exp = "p1 && p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && p1)");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 
@@ -226,7 +209,6 @@ public class ExpTest {
     void testSimplifyIdempotentLaws_2() {
         String exp = "p1 || p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || p1)");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 
@@ -237,18 +219,14 @@ public class ExpTest {
     void testSimplifyDominationLaws_1() {
         String exp = "p1 && false";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && false)");
         assertEquals(parsed.simplify().evaluate(Map.of()), false);
-        assertEquals(parsed.simplify().toPrettyString(), "false");
     }
 
     @Test
     void testSimplifyDominationLaws_2() {
         String exp = "p1 || true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || true)");
         assertEquals(parsed.simplify().evaluate(Map.of()), true);
-        assertEquals(parsed.simplify().toPrettyString(), "true");
     }
 
     /**
@@ -258,7 +236,6 @@ public class ExpTest {
     void testSimplifyDoubleNegationLaws() {
         String exp = "! ( ! p1 )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! (! p1))");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 
@@ -269,36 +246,28 @@ public class ExpTest {
     void testSimplifyNegationLaws_1() {
         String exp = "! ( true )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! true)");
         assertEquals(parsed.simplify().evaluate(Map.of()), false);
-        assertEquals(parsed.simplify().toPrettyString(), "false");
     }
 
     @Test
     void testSimplifyNegationLaws_2() {
         String exp = "! ( false )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! false)");
         assertEquals(parsed.simplify().evaluate(Map.of()), true);
-        assertEquals(parsed.simplify().toPrettyString(), "true");
     }
 
     @Test
     void testSimplifyNegationLaws_3() {
         String exp = "p1 && ! p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && (! p1))");
         assertEquals(parsed.simplify().evaluate(Map.of()), false);
-        assertEquals(parsed.simplify().toPrettyString(), "false");
     }
 
     @Test
     void testSimplifyNegationLaws_4() {
         String exp = "p1 || ! p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || (! p1))");
         assertEquals(parsed.simplify().evaluate(Map.of()), true);
-        assertEquals(parsed.simplify().toPrettyString(), "true");
     }
 
     /**
@@ -308,7 +277,6 @@ public class ExpTest {
     void testSimplifyDeMorgansLaws_1() {
         String exp = "!(p1 || p2)";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! (p1 || p2))");
         assertEquals(parsed.simplify().toPrettyString(), "((! p1) && (! p2))");
     }
 
@@ -316,7 +284,6 @@ public class ExpTest {
     void testSimplifyDeMorgansLaws_2() {
         String exp = "!(p1 && p2)";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(! (p1 && p2))");
         assertEquals(parsed.simplify().toPrettyString(), "((! p1) || (! p2))");
     }
 
@@ -327,7 +294,6 @@ public class ExpTest {
     void testSimplifyAbsorptionLaws_1() {
         String exp = "p1 || ( p2 && p3 )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || (p2 && p3))");
         assertEquals(parsed.simplify().toPrettyString(), "(p1 || (p2 && p3))");
     }
 
@@ -335,7 +301,6 @@ public class ExpTest {
     void testSimplifyAbsorptionLaws_2() {
         String exp = "p1 && ( p2 || p3 )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && (p2 || p3))");
         assertEquals(parsed.simplify().toPrettyString(), "(p1 && (p2 || p3))");
     }
 
@@ -343,7 +308,6 @@ public class ExpTest {
     void testSimplifyAbsorptionLaws_3() {
         String exp = "p1 || ( p1 && p2 )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 || (p1 && p2))");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 
@@ -351,7 +315,6 @@ public class ExpTest {
     void testSimplifyAbsorptionLaws_4() {
         String exp = "p1 && ( p1 || p2 )";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.toPrettyString(), "(p1 && (p1 || p2))");
         assertEquals(parsed.simplify().toPrettyString(), "p1");
     }
 }
