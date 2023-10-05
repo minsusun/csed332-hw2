@@ -229,9 +229,13 @@ boolean addEdge(N source, N target);
   + source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
   + target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:
-  + $`V_{next}=V_{this}`$
-  + $`E_{next}=E_{this}\cup \{\texttt{(source, target), (target,source)}\}`$
-  + returns true if $`\texttt{(source,target)} \notin E_{this}\land \texttt{(target,source)} \notin E_{this}`$ or $`\texttt{source}\in V_{this}\land \texttt{target}\notin V_{this}`$.
+  + If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+  + if $`\texttt{source}\in V_{this}\land \texttt{target}\notin V_{this}`$
+    + $`V_{next}=V_{this}\cup \{\texttt{source,target}\}`$
+    + $`E_{next}=E_{this}\cup \{\texttt{(source, target), (target,source)}\}`$
+    + returns true
+  + otherwise
+    + return false
 
 ##### removeEdge
 
@@ -285,4 +289,4 @@ For each question, explain your reasoning _using the abstract specifications tha
 * Is `MutableTree<N>` a subtype of `MutableGraph<N>`?
   * Answer : No
   * Reason
-    * `boolean addEdge(@NotNull N source, @NotNull N target)` : If a edge between a vertex in $V_{this}$ and another vertex not in $V_{this}$ is added to `MutableTree<N>` by `addEdge`, `MutableTree<N>` does not add a new vertex connected by a added edge, but `MutableGraph<N>` should.
+    * `boolean addEdge(@NotNull N source, @NotNull N target)` : If a edge between a vertex in $V_{this}$ and another vertex not in $V_{this}$ is added to `MutableTree<N>` by `addEdge`, `MutableTree<N>` returns `false` but `MutableGraph<N>` returns `true`.
