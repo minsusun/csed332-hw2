@@ -263,25 +263,21 @@ For each question, explain your reasoning _using the abstract specifications tha
 * Is `Tree<N>` a subtype of `Graph<N>`?
   * Answer : Yes
   * Reasons
-    * `boolean containsVertex(@NotNull N vertex)` : performs correctly on `Tree<N>` as same as `Graph<N>`
-    * `boolean containsEdge(@NotNull N source, @NotNull N target)` : performs correctly on `Tree<N>` as same as `Graph<N>`
-    * `@NotNull Set<N> getNeighborhood(@NotNull N vertex)` : performs correctly on `Tree<N>` as same as `Graph<N>`
+    * Since performing the methods of `Graph<N>` on `Tree<N>` works same; and
+    * class invariants of `Tree<N>` is stronger than `Graph<N>`'s.
 
 ##### `MutableGraph<N>` and `Graph<N>`
 
 * Is `MutableGraph<N>` a subtype of `Graph<N>`?
   * Answer : Yes
   * Reason
-    * `boolean containsVertex(@NotNull N vertex)` : performs correctly on `MutableGraph<N>` as same as `Graph<N>`
-    * `boolean containsEdge(@NotNull N source, @NotNull N target)` : performs correctly on `MutableGraph<N>` as same as `Graph<N>`
-    * `@NotNull Set<N> getNeighborhood(@NotNull N vertex)` : performs correctly on `MutableGraph<N>` as same as `Graph<N>`
+    * After executing `removeVertex` from `MutableGraph<N>` does not gaurantee that the result of executing `containsVertex` on both `Graph<N>` and `MutableGraph<N>` are same.
 
 ##### `MutableTree<N>` and `Tree<N>`
 
 * Is `MutableTree<N>` a subtype of `Tree<N>`?
   * Answer : No
   * Reason
-    * Everything performs correctly on `MutableTree<N>` as same as `Tree<N>` except `int getDepth(@NotNull N vertex)`
     * `int getDepth(@NotNull N vertex)` : If a vertex added to `MutableTree<N>` by `boolean addVertex(@NotNull N vertex)` with vertex not connected to any vertex, calling `getDepth(vertex)` cannot perform well since the vertex added by `addVertex` does not have path from root to given vertex.
 
 ##### `MutableTree<N>` and `MutableGraph<N>`
@@ -289,5 +285,4 @@ For each question, explain your reasoning _using the abstract specifications tha
 * Is `MutableTree<N>` a subtype of `MutableGraph<N>`?
   * Answer : No
   * Reason
-    * Everything performs correctly on `MutableTree<N>` as same as `MutableGraph<N>` except `boolean addEdge(@NotNull N source, @NotNull N target)`
     * `boolean addEdge(@NotNull N source, @NotNull N target)` : If a edge between a vertex in $V_{this}$ and another vertex not in $V_{this}$ is added to `MutableTree<N>` by `addEdge`, `MutableTree<N>` does not add a new vertex connected by a added edge, but `MutableGraph<N>` should.
