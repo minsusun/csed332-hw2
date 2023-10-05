@@ -1,6 +1,9 @@
 package edu.postech.csed332.homework2;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.*;
 
@@ -52,18 +55,19 @@ public class ExpTest {
      * Test for Exp::Evaluate
      * (1) Arbitrary Exp
      */
-    @Test
-    void testEvaluateExp() {
+    @ParameterizedTest(name = "testEvaluateExp_{index}")
+    @CsvSource({"true, true, true",
+            "true, true, false",
+            "true, false, true",
+            "false, true, true",
+            "true, false, false",
+            "false, true, false",
+            "false, false, true",
+            "false, false, false"})
+    void testEvaluateExp(boolean b1, boolean b2, boolean b3) {
         String exp = "p1 || p2 && ! p3 || true";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, true, 3, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, false, 2, true, 3, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, false, 3, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, true, 3, false)), true);
-        assertEquals(parsed.evaluate(Map.of(1, false, 2, false, 3, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, false, 2, true, 3, false)), true);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, false, 3, false)), true);
-        assertEquals(parsed.evaluate(Map.of(1, false, 2, false, 3, false)), true);
+        assertEquals(parsed.evaluate(Map.of(1, b1, 2, b2, 3, b3)), true);
     }
 
     /**
@@ -90,13 +94,12 @@ public class ExpTest {
         assertEquals(parsed.evaluate(Map.of()), false);
     }
 
-    @Test
-    void testEvaluateConjunction_4() {
+    @ParameterizedTest(name = "testEvaluateConjunction_4_{index}")
+    @CsvSource({"true, true, true", "true, false, false", "false, false, false"})
+    void testEvaluateConjunction_4(boolean b1, boolean b2, boolean b3) {
         String exp = "p1 && p2";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, false)), false);
-        assertEquals(parsed.evaluate(Map.of(1, false, 2, false)), false);
+        assertEquals(parsed.evaluate(Map.of(1, b1, 2, b2)), b3);
     }
 
     /**
@@ -123,13 +126,12 @@ public class ExpTest {
         assertEquals(parsed.evaluate(Map.of()), false);
     }
 
-    @Test
-    void testEvaluateDisjunction_4() {
+    @ParameterizedTest(name = "testEvaluateDisjunction_4_{index}")
+    @CsvSource({"true, true, true", "true, false, true", "false, false, false"})
+    void testEvaluateDisjunction_4(boolean b1, boolean b2, boolean b3) {
         String exp = "p1 || p2";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, true, 2, false)), true);
-        assertEquals(parsed.evaluate(Map.of(1, false, 2, false)), false);
+        assertEquals(parsed.evaluate(Map.of(1, b1, 2, b2)), b3);
     }
 
     /**
@@ -149,32 +151,32 @@ public class ExpTest {
         assertEquals(parsed.evaluate(Map.of()), true);
     }
 
-    @Test
-    void testEvaluateNegation_3() {
+    @ParameterizedTest(name = "testEvaluateNegation_3_{index}")
+    @CsvSource({"true", "false"})
+    void testEvaluateNegation_3(boolean b1) {
         String exp = "! p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.evaluate(Map.of(1, true)), false);
-        assertEquals(parsed.evaluate(Map.of(1, false)), true);
+        assertEquals(parsed.evaluate(Map.of(1, b1)), !b1);
     }
 
     /**
      * (5) Variable
      */
-    @Test
-    void testEvaluateVariable() {
+    @ParameterizedTest(name = "testEvaluateVariable_{index}")
+    @CsvSource({"true", "false"})
+    void testEvaluateVariable(boolean b1) {
         String exp = "p1";
         Exp parsed = ExpParser.parse(exp);
-        assertEquals(parsed.evaluate(Map.of(1, true)), true);
-        assertEquals(parsed.evaluate(Map.of(1, false)), false);
+        assertEquals(parsed.evaluate(Map.of(1, b1)), b1);
     }
 
     /**
      * (6) Constant
      */
-    @Test
-    void testEvaluateConstant() {
-        assertEquals(ExpParser.parse("true").evaluate(Map.of()), true);
-        assertEquals(ExpParser.parse("false").evaluate(Map.of()), false);
+    @ParameterizedTest(name = "testEvaluateConstant_{index}")
+    @CsvSource({"true", "false"})
+    void testEvaluateConstant(boolean b1) {
+        assertEquals(ExpParser.parse(Boolean.toString(b1)).evaluate(Map.of()), b1);
     }
 
     /**
