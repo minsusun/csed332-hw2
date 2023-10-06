@@ -30,6 +30,17 @@ public class ParentPointerTree<N extends Comparable<N>> implements MutableTree<N
      */
     private final @NotNull SortedMap<N, Node<N>> nodeMap;
 
+    /*
+     * Invariant
+     *  root is not null
+     *  nodeMap has unique keys which are in V_{this}
+     *  each value of nodeMap has Node<V> datatype with indicating the unique parent and its depth
+     *  for all edges (v,w) in E_{this}, (w,v) is in E_{this} and both v and w are in V_{this}
+     *  for all vertices v in V_{this} except root, has a only unique Path(from root to v)
+     * Abstract Function
+     *  represents the tree with child-parent map
+     */
+
     /**
      * Create a parent pointer tree with a given root vertex.
      *

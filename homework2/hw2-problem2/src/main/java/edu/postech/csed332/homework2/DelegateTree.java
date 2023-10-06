@@ -29,6 +29,20 @@ public class DelegateTree<N extends Comparable<N>> implements MutableTree<N> {
      */
     private final @NotNull Map<N, Integer> depthMap;
 
+    /*
+     * Invariant
+     *  root is not null
+     *  delegate is not null
+     *  delegate contains all vertices and edges information
+     *  depthMap is not null
+     *  depthMap has unique keys which are in V_{this}
+     *  each value of depthMap indicates its depth
+     *  for all edges (v,w) in E_{this}, (w,v) is in E_{this} and both v and w are in V_{this}
+     *  for all vertices v in V_{this} except root, has only unique Path(from root to v)
+     * Abstract Function
+     *  represents the tree
+     */
+
     /**
      * Creates a tree that delegates to a given graph.
      *
