@@ -20,6 +20,16 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
      */
     private final @NotNull SortedMap<N, SortedSet<N>> adjMap;
 
+    /*
+     * Invariant
+     *  adjMap is not null
+     *  adjMap has unique keys which are in V_{this}
+     *  each value of adjMap has unique elements in V_{this}
+     *  for all edges (v,w) in E_{this}, (w,v) is in E_{this} and both v and w are in V_{this}
+     * Abstract Function
+     *  represents the graph using the adjacent list adjMap
+     */
+
     /**
      * Creates an empty graph
      */
@@ -30,43 +40,75 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
     @Override
     public boolean containsVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        return this.adjMap.containsKey(vertex);
     }
 
     @Override
     public boolean addVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        if(containsVertex(vertex)) {
+            return false;
+        }
+        else {
+            this.adjMap.put(vertex, new TreeSet<>());
+            return true;
+        }
     }
 
     @Override
     public boolean removeVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        if(containsVertex(vertex)) {
+            this.adjMap.get(vertex).forEach(v -> this.adjMap.get(v).remove(vertex));
+            this.adjMap.remove(vertex);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
     public boolean containsEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if(containsVertex(source)) {
+            return this.adjMap.get(source).contains(target);
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
     public boolean addEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if(containsEdge(source, target)) {
+            return false;
+        }
+        else {
+            this.adjMap.computeIfAbsent(source, (vertex) -> new TreeSet<>()).add(target);
+            this.adjMap.computeIfAbsent(target, (vertex) -> new TreeSet<>()).add(source);
+            return true;
+        }
     }
 
     @Override
     public boolean removeEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if(containsEdge(source, target)) {
+            this.adjMap.get(source).remove(target);
+            this.adjMap.get(target).remove(source);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
     public @NotNull Set<N> getNeighborhood(@NotNull N vertex) {
         // TODO: implement this
-        return Set.of();
+        return Collections.unmodifiableSet(this.adjMap.getOrDefault(vertex, new TreeSet<>()));
     }
 
     @Override
@@ -88,6 +130,12 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
      */
     boolean checkInv() {
         // TODO: implement this
-        return false;
+        return this.adjMap.entrySet().stream()
+                .allMatch((entry) -> entry.getValue().stream()
+                        .allMatch((vertex) -> this.adjMap
+                                .getOrDefault(vertex, new TreeSet<>())
+                                .contains(entry.getKey())
+                        )
+                );
     }
 }

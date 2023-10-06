@@ -2,6 +2,8 @@ package edu.postech.csed332.homework2;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +96,7 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(tree.getRoot(), v3);
         tree.addEdge(v1, v4);
 
-        assertEquals(tree.getParent(v2), Optional.of(v2));
+        assertEquals(tree.getParent(v2), Optional.of(v1));
 
         assertTrue(checkInv());
     }
@@ -119,6 +121,142 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(v1, v4);
 
         assertEquals(tree.getParent(v6), Optional.empty());
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testGetNeighborhood() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertEquals(tree.getNeighborhood(v1), Set.of(tree.getRoot(), v2, v4));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testGetNeighborhoodOfRoot() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertEquals(tree.getNeighborhood(tree.getRoot()), Set.of(v1, v3));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testGetNeighborhoodOfNonExistingVertex() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertEquals(tree.getNeighborhood(v5), Set.of());
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testGetVertices() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertEquals(tree.getVertices(), Set.of(tree.getRoot(), v1, v2, v3, v4));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testGetEdges() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertEquals(tree.getEdges(), Set.of(
+                new Edge<>(tree.getRoot(), v1), new Edge<>(v1, tree.getRoot()),
+                new Edge<>(tree.getRoot(), v3), new Edge<>(v3, tree.getRoot()),
+                new Edge<>(v1, v2), new Edge<>(v2,v1), new Edge<>(v1,v4), new Edge<>(v4, v1)));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testContainsVertex() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertTrue(tree.containsVertex(v1));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testContainsVertexNotInV() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertFalse(tree.containsVertex(v5));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testContainsEdgeSourceIsParent() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertTrue(tree.containsEdge(v1, v2));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testContainsEdgeSourceIsChild() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertTrue(tree.containsEdge(v2, v1));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testContainsEdgeNotInESourceAndTargetInV() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertFalse(tree.containsEdge(tree.getRoot(), v4));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testContainsEdgeNotInENeitherSourceNrTargetInV() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertFalse(tree.containsEdge(v1, v5));
+        assertFalse(tree.containsEdge(v5, v6));
 
         assertTrue(checkInv());
     }
@@ -196,8 +334,8 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(v1, v4);
 
         assertFalse(tree.addEdge(v1,v4));
-        assertFalse(tree.containsEdge(v4, v1));
-        assertFalse(tree.containsEdge(v1, v4));
+        assertTrue(tree.containsEdge(v4, v1));
+        assertTrue(tree.containsEdge(v1, v4));
 
         assertTrue(checkInv());
     }
@@ -249,13 +387,31 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
     }
 
     @Test
-    void testRemoveEdge() {
+    void testRemoveEdgeSourceIsParent() {
         tree.addEdge(tree.getRoot(), v1);
         tree.addEdge(v1, v2);
         tree.addEdge(tree.getRoot(), v3);
         tree.addEdge(v1, v4);
 
         assertTrue(tree.removeEdge(tree.getRoot(), v1));
+        assertFalse(tree.containsVertex(v1));
+        assertFalse(tree.containsVertex(v2));
+        assertFalse(tree.containsVertex(v4));
+        assertFalse(tree.containsEdge(tree.getRoot(), v1));
+        assertFalse(tree.containsEdge(v1, v2));
+        assertFalse(tree.containsEdge(v1, v4));
+
+        assertTrue(checkInv());
+    }
+
+    @Test
+    void testRemoveEdgeSourceIsChild() {
+        tree.addEdge(tree.getRoot(), v1);
+        tree.addEdge(v1, v2);
+        tree.addEdge(tree.getRoot(), v3);
+        tree.addEdge(v1, v4);
+
+        assertTrue(tree.removeEdge(v1, tree.getRoot()));
         assertFalse(tree.containsVertex(v1));
         assertFalse(tree.containsVertex(v2));
         assertFalse(tree.containsVertex(v4));
