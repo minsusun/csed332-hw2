@@ -125,12 +125,7 @@ public class ParentPointerTree<N extends Comparable<N>> implements MutableTree<N
     @Override
     public boolean containsEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        if(containsVertex(source) && containsVertex(target)) {
-            return this.nodeMap.get(source).parent() == target || this.nodeMap.get(target).parent() == source;
-        }
-        else {
-            return false;
-        }
+        return getEdges().stream().anyMatch((edge) -> edge.compareTo(new Edge<>(source, target)) == 0);
     }
 
     @Override

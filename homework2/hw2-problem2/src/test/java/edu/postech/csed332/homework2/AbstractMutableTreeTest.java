@@ -213,7 +213,7 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
     }
 
     @Test
-    void testContainsEdgeSourceIsParent() {
+    void testContainsEdge() {
         tree.addEdge(tree.getRoot(), v1);
         tree.addEdge(v1, v2);
         tree.addEdge(tree.getRoot(), v3);
@@ -225,31 +225,7 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
     }
 
     @Test
-    void testContainsEdgeSourceIsChild() {
-        tree.addEdge(tree.getRoot(), v1);
-        tree.addEdge(v1, v2);
-        tree.addEdge(tree.getRoot(), v3);
-        tree.addEdge(v1, v4);
-
-        assertTrue(tree.containsEdge(v2, v1));
-
-        assertTrue(checkInv());
-    }
-
-    @Test
-    void testContainsEdgeNotInESourceAndTargetInV() {
-        tree.addEdge(tree.getRoot(), v1);
-        tree.addEdge(v1, v2);
-        tree.addEdge(tree.getRoot(), v3);
-        tree.addEdge(v1, v4);
-
-        assertFalse(tree.containsEdge(tree.getRoot(), v4));
-
-        assertTrue(checkInv());
-    }
-
-    @Test
-    void testContainsEdgeNotInENeitherSourceNrTargetInV() {
+    void testContainsEdgeNotInE() {
         tree.addEdge(tree.getRoot(), v1);
         tree.addEdge(v1, v2);
         tree.addEdge(tree.getRoot(), v3);

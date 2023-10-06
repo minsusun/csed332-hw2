@@ -1,6 +1,9 @@
 package edu.postech.csed332.homework2;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegerDelegateMutableTreeTest extends AbstractMutableTreeTest<Integer, DelegateTree<Integer>> {
 
@@ -24,5 +27,10 @@ public class IntegerDelegateMutableTreeTest extends AbstractMutableTreeTest<Inte
 
     // TODO: write more white-box test cases to achieve more code coverage, if needed.
     // You do not need to add more test methods, if you tests already meet the desired coverage.
-
+    @Test
+    void testDelegateTreeIllegalArgumentException() {
+        AdjacencyListGraph<Integer> tmp = new AdjacencyListGraph<>();
+        tmp.addVertex(v1);
+        assertThrows(IllegalArgumentException.class, () -> { tree = new DelegateTree<>(tmp, 0); });
+    }
 }

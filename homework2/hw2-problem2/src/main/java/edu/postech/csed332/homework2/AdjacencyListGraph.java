@@ -71,12 +71,7 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
     @Override
     public boolean containsEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        if(containsVertex(source)) {
-            return this.adjMap.get(source).contains(target);
-        }
-        else {
-            return false;
-        }
+        return getEdges().stream().anyMatch((edge) -> edge.compareTo(new Edge<>(source, target)) == 0);
     }
 
     @Override
